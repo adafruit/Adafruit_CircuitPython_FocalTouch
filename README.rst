@@ -12,7 +12,8 @@ Introduction
     :target: https://discord.gg/nBQh6qu
     :alt: Discord
 
-TODO
+CircuitPython driver for common low-cost FocalTech capacitive touch chips.
+Currently supports FT6206
 
 Dependencies
 =============
@@ -28,7 +29,22 @@ This is easily achieved by downloading
 Usage Example
 =============
 
-TODO
+.. code-block:: python
+
+	import time
+	import busio
+	import board
+	from ft62xx import adafruit_ft62xx
+
+	# Create library object using our Bus I2C port
+	i2c = busio.I2C(board.SCL, board.SDA)
+
+	ft = adafruit_ft62xx.Adafruit_FT6206(i2c, debug=True)
+
+	while True:
+	    n = ft.touched
+	    if n:
+        	print(ft.touches)
 
 API Reference
 =============

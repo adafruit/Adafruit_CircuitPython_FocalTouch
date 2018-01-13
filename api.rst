@@ -1,5 +1,5 @@
 
 .. If you created a package, create one automodule per module in the package.
 
-.. automodule:: adafruit_ft62xx
+.. automodule:: adafruit_focaltouch
    :members:

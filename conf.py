@@ -31,7 +31,7 @@ source_suffix = '.rst'
 master_doc = 'README'
 
 # General information about the project.
-project = u'Adafruit ft62xx Library'
+project = u'Adafruit FocalTouch Library'
 copyright = u'2017 ladyada'
 author = u'ladyada'
 
@@ -96,7 +96,7 @@ else:
 html_static_path = ['_static']
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'AdafruitFt62xxLibrarydoc'
+htmlhelp_basename = 'AdafruitFocalTouchLibrarydoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -122,7 +122,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'Adafruitft62xxLibrary.tex', u'Adafruitft62xx Library Documentation',
+    (master_doc, 'AdafruitFocalTouchLibrary.tex', u'AdafruitFocalTouch Library Documentation',
      author, 'manual'),
 ]
 
@@ -131,7 +131,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'Adafruitft62xxlibrary', u'Adafruit ft62xx Library Documentation',
+    (master_doc, 'AdafruitFocalTouchlibrary', u'Adafruit FocalTouch Library Documentation',
      [author], 1)
 ]
 
@@ -141,7 +141,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'Adafruitft62xxLibrary', u'Adafruit ft62xx Library Documentation',
-     author, 'Adafruitft62xxLibrary', 'One line description of project.',
+    (master_doc, 'AdafruitFocalTouchLibrary', u'Adafruit FocalTouch Library Documentation',
+     author, 'AdafruitFocalTouchLibrary', 'One line description of project.',
      'Miscellaneous'),
 ]

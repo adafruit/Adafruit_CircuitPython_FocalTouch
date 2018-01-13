@@ -2,9 +2,9 @@
 Introduction
 ============
 
-.. image:: https://readthedocs.org/projects/adafruit-circuitpython-ft62xx/badge/?version=latest
+.. image:: https://readthedocs.org/projects/adafruit-circuitpython-focaltouch/badge/?version=latest
 
-    :target: https://circuitpython.readthedocs.io/projects/ft62xx/en/latest/
+    :target: https://circuitpython.readthedocs.io/projects/focaltouch/en/latest/
 
     :alt: Documentation Status
 
@@ -13,7 +13,7 @@ Introduction
     :alt: Discord
 
 CircuitPython driver for common low-cost FocalTech capacitive touch chips.
-Currently supports FT6206
+Currently supports FT6206 & FT6236
 
 Dependencies
 =============
@@ -34,12 +34,12 @@ Usage Example
 	import time
 	import busio
 	import board
-	from ft62xx import adafruit_ft62xx
+	import adafruit_focaltouch
 
 	# Create library object using our Bus I2C port
 	i2c = busio.I2C(board.SCL, board.SDA)
 
-	ft = adafruit_ft62xx.Adafruit_FT6206(i2c, debug=True)
+	ft = adafruit_focaltouch.Adafruit_FT6XXX(i2c, debug=True)
 
 	while True:
 	    n = ft.touched
@@ -58,7 +58,7 @@ Contributing
 ============
 
 Contributions are welcome! Please read our `Code of Conduct
-<https://github.com/adafruit/Adafruit_CircuitPython_ft62xx/blob/master/CODE_OF_CONDUCT.md>`_
+<https://github.com/adafruit/Adafruit_CircuitPython_FocalTouch/blob/master/CODE_OF_CONDUCT.md>`_
 before contributing to help this project stay welcoming.
 
 Building locally
@@ -83,4 +83,4 @@ Then run the build:
 
 .. code-block:: shell
 
-    circuitpython-build-bundles --filename_prefix adafruit-circuitpython-ft62xx --library_location .
+    circuitpython-build-bundles --filename_prefix adafruit-circuitpython-focaltouch --library_location .

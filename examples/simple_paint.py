@@ -4,7 +4,7 @@ import time
 import busio
 import board
 import digitalio
-from ft62xx import adafruit_ft62xx
+import adafruit_focaltouch
      
 # Create library object using our Bus I2C & SPI port
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -20,7 +20,7 @@ display = ili9341.ILI9341(spi, cs=cs_pin, dc=dc_pin)
 # Fill with black!
 display.fill(color565(0, 0, 0))
 
-ft = adafruit_ft62xx.Adafruit_FT6206(i2c)
+ft = adafruit_focaltouch.Adafruit_FocalTouch(i2c)
 
 while True:
     if ft.touched:

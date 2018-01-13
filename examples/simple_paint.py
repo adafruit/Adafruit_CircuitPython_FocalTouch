@@ -1,11 +1,14 @@
-# Simple painting demo
+"""
+Simple painting demo that draws on an Adafruit capacitive touch shield with
+ILI9341 display and FT6206 captouch driver
+"""
 
-import time
 import busio
 import board
 import digitalio
 import adafruit_focaltouch
-     
+from adafruit_rgb_display import ili9341, color565
+
 # Create library object using our Bus I2C & SPI port
 i2c = busio.I2C(board.SCL, board.SDA)
 spi = busio.SPI(clock=board.SCK, MOSI=board.MOSI, MISO=board.MISO)
@@ -15,7 +18,6 @@ cs_pin = digitalio.DigitalInOut(board.D10)
 dc_pin = digitalio.DigitalInOut(board.D9)
 
 # Initialize display
-from adafruit_rgb_display import ili9341, color565
 display = ili9341.ILI9341(spi, cs=cs_pin, dc=dc_pin)
 # Fill with black!
 display.fill(color565(0, 0, 0))

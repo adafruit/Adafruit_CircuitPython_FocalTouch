@@ -1,4 +1,8 @@
-import time
+"""
+Example for getting touch data from an FT6206 or FT6236 capacitive
+touch driver, over I2C
+"""
+
 import busio
 import board
 import adafruit_focaltouch

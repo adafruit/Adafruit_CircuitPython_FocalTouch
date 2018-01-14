@@ -26,6 +26,6 @@ install:
   - pip install pylint circuitpython-build-tools
 
 script:
-  - pylint adafruit_ft62xx.py
+  - pylint adafruit_focaltouch.py
   - ([[ ! -d "examples" ]] || pylint --disable=missing-docstring,invalid-name examples/*.py)
-  - circuitpython-build-bundles --filename_prefix adafruit-circuitpython-ft62xx --library_location .
+  - circuitpython-build-bundles --filename_prefix adafruit-circuitpython-focaltouch --library_location .

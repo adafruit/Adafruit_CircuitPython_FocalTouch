@@ -23,9 +23,28 @@
 `adafruit_focaltouch`
 ====================================================
 
-TODO(description)
+CircuitPython driver for common low-cost FocalTech capacitive touch chips.
+Currently supports FT6206 & FT6236.
 
 * Author(s): ladyada
+
+Implementation Notes
+--------------------
+
+**Hardware:**
+
+* Adafruit `2.8" TFT LCD with Cap Touch Breakout Board w/MicroSD Socket
+  <http://www.adafruit.com/product/2090>`_ (Product ID: 2090)
+
+* Adafruit `2.8" TFT Touch Shield for Arduino w/Capacitive Touch
+  <http://www.adafruit.com/product/1947>`_ (Product ID: 1947)
+
+**Software and Dependencies:**
+
+* Adafruit CircuitPython firmware for the ESP8622 and M0-based boards:
+  https://github.com/adafruit/circuitpython/releases
+* Adafruit's Bus Device library (when using I2C/SPI):
+  https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
 """
 
 # imports

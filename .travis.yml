@@ -1,32 +1,32 @@
-# This is a common .travis.yml for generating library release zip files for
-# CircuitPython library releases using circuitpython-build-tools.
-# See https://github.com/adafruit/circuitpython-build-tools for detailed setup
-# instructions.
-
 dist: trusty
 sudo: false
 language: python
 python:
-    - "3.6"
-
+- '3.6'
 cache:
-    pip: true
-
+  pip: true
 deploy:
-  provider: releases
-  api_key: $GITHUB_TOKEN
+- provider: releases
+  api_key: "$GITHUB_TOKEN"
   file_glob: true
-  file: $TRAVIS_BUILD_DIR/bundles/*
+  file: "$TRAVIS_BUILD_DIR/bundles/*"
   skip_cleanup: true
   overwrite: true
   on:
     tags: true
-
+- provider: pypi
+  user: adafruit-travis
+  on:
+    tags: true
+  password:
+    secure: l3xCScj+baXRnUe4TUwx1WStixl8xp2wwRizNxT2qUuWp1W2d3pxUgzjZEnHwmjbHLWiEWo1kCFSbTjzITIBK5B4OkFiIT4FcyrbdRlr1gZv05qaUBj5tRe9QMqQyNJMr6TJnxwLe8njIF7KTokZRnoBxyCOsx4CIL+vFEnBFerbyGW0nkIdL5m+ScM/995Kq8L0nwSiT+0AawxEijO+SsgC+dGTKIT/8Vn0TOF0tKhcz192/+i+S9G9fSscal29W4bIuTrMAoM8NlJ/G/eWbj6DOSDaJpCVT/bBwJSrQaZjwa2BNiNvIgRzJL5hLASpHyaALjvSuIowf+59NHrtWyMd0eoNa9BTBrg+Zl1UutsYTeJqVk+4nHpMC1fEJx2c4k9sR+Krcmfts5SCKbApmuVTcFII9vD3GmVJzVS+P7y4P846ovenjLgW7+HW4A+SlMr9EJ0ZdyktVvDLLr1J+KCR+Tj3V19DKu/wxyEqjTdP7+tOyMxBjh7P/uLytNv4wcdnSxUN+vnAH1u81mvX9LcJc2gokoRXHqmOPoffHETnaO41dm9nZ+u3a6goBtRRPCwOP5l3he7/16oWLOaDKG0aNVBwmvhGIvcZ9LwwtZdRQ/TXOjtclXd7NrOJDl4bW7bKxz1KKoHoMc7MuJbKnD6QqhaLdM6UyzD61eO5r/o=
 install:
-  - pip install pylint circuitpython-build-tools Sphinx sphinx-rtd-theme
-
+- pip install -r requirements.txt
+- pip install pylint circuitpython-build-tools Sphinx sphinx-rtd-theme
+- pip install --force-reinstall pylint==1.9.2
 script:
-  - pylint adafruit_focaltouch.py
-  - ([[ ! -d "examples" ]] || pylint --disable=missing-docstring,invalid-name examples/*.py)
-  - circuitpython-build-bundles --filename_prefix adafruit-circuitpython-focaltouch --library_location .
-  - cd docs && sphinx-build -E -W -b html . _build/html
+- pylint adafruit_focaltouch.py
+- ([[ ! -d "examples" ]] || pylint --disable=missing-docstring,invalid-name examples/*.py)
+- circuitpython-build-bundles --filename_prefix adafruit-circuitpython-focaltouch
+  --library_location .
+- cd docs && sphinx-build -E -W -b html . _build/html && cd ..

@@ -41,7 +41,7 @@ Usage Example
 	# Create library object using our Bus I2C port
 	i2c = busio.I2C(board.SCL, board.SDA)
 
-	ft = adafruit_focaltouch.Adafruit_FT6XXX(i2c, debug=True)
+	ft = adafruit_focaltouch.Adafruit_FocalTouch(i2c, debug=True)
 
 	while True:
 	    n = ft.touched

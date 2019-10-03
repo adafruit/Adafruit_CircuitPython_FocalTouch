@@ -7,6 +7,6 @@ Ensure your device works with these simple tests.
     :caption: examples/focaltouch_print_touches.py
     :linenos:
 
-.. literalinclude:: ../examples/focaltouch_simple_paint.py
-    :caption: examples/focaltouch_simple_paint.py
+.. literalinclude:: ../examples/focaltouch_paint_simpletest.py
+    :caption: examples/focaltouch_paint_simpletest.py
     :linenos:

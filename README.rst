@@ -10,8 +10,8 @@ Introduction
     :target: https://discord.gg/nBQh6qu
     :alt: Discord
 
-.. image:: https://travis-ci.com/adafruit/Adafruit_CircuitPython_FocalTouch.svg?branch=master
-    :target: https://travis-ci.com/adafruit/Adafruit_CircuitPython_FocalTouch
+.. image:: https://github.com/adafruit/Adafruit_CircuitPython_FocalTouch/workflows/Build%20CI/badge.svg
+    :target: https://github.com/adafruit/Adafruit_CircuitPython_FocalTouch/actions/
     :alt: Build Status
 
 CircuitPython driver for common low-cost FocalTech capacitive touch chips.

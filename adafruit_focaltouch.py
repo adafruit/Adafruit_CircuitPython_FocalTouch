@@ -87,7 +87,7 @@ class Adafruit_FocalTouch:
         self._i2c = I2CDevice(i2c, address)
         self._debug = debug
 
-        chip_data = self._read(_FT6XXX_REG_LIBH, 9)
+        chip_data = self._read(_FT6XXX_REG_LIBH, 8)
         lib_ver, chip_id, _, _, firm_id, _, vend_id = struct.unpack('>HBBBBBB', chip_data)
 
         if vend_id != 0x11:

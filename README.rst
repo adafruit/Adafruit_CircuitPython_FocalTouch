@@ -33,9 +33,9 @@ Usage Example
 
 .. code-block:: python
 
-	import busio
-	import board
 	import time
+	import board
+	import busio
 	import adafruit_focaltouch
 
 	# Create library object (named "ft") using a Bus I2C port

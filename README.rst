@@ -59,19 +59,23 @@ Usage Example
 .. code-block:: python
 
 	import time
-	import busio
 	import board
+	import busio
 	import adafruit_focaltouch
 
-	# Create library object using our Bus I2C port
+	# Create library object (named "ft") using a Bus I2C port
 	i2c = busio.I2C(board.SCL, board.SDA)
 
-	ft = adafruit_focaltouch.Adafruit_FocalTouch(i2c, debug=True)
+	ft = adafruit_focaltouch.Adafruit_FocalTouch(i2c, debug=False)
 
 	while True:
-	    n = ft.touched
-	    if n:
-        	print(ft.touches)
+	    # if the screen is being touched print the touches
+	    if ft.touched:
+		print(ft.touches)
+	    else:
+		print('no touch')
+
+	    time.sleep(.15)
 
 Contributing
 ============

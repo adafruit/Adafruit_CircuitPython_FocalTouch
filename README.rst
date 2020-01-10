@@ -50,7 +50,7 @@ Usage Example
 	    else:
 		print('no touch')
 
-	    time.sleep(.15
+	    time.sleep(.15)
 
 Contributing
 ============

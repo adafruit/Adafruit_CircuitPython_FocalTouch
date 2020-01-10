@@ -3,9 +3,9 @@ Example for getting touch data from an FT6206 or FT6236 capacitive
 touch driver, over I2C
 """
 
+import time
 import busio
 import board
-import time
 import adafruit_focaltouch
 
 # Create library object (named "ft") using a Bus I2C port

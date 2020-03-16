@@ -18,6 +18,6 @@ while True:
     if ft.touched:
         print(ft.touches)
     else:
-        print('no touch')
+        print("no touch")
 
-    time.sleep(.15)
+    time.sleep(0.15)

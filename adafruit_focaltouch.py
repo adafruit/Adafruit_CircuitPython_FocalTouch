@@ -75,6 +75,7 @@ _FT6XXX_REG_FIRMVERS = const(0xA6)
 _FT6XXX_REG_VENDID = const(0xA8)
 _FT6XXX_REG_RELEASE = const(0xAF)
 
+
 class Adafruit_FocalTouch:
     """
     A driver for the FocalTech capacitive touch sensor.
@@ -88,7 +89,9 @@ class Adafruit_FocalTouch:
         self._debug = debug
 
         chip_data = self._read(_FT6XXX_REG_LIBH, 8)
-        lib_ver, chip_id, _, _, firm_id, _, vend_id = struct.unpack('>HBBBBBB', chip_data)
+        lib_ver, chip_id, _, _, firm_id, _, vend_id = struct.unpack(
+            ">HBBBBBB", chip_data
+        )
 
         if vend_id != 0x11:
             raise RuntimeError("Did not find FT chip")
@@ -109,7 +112,6 @@ class Adafruit_FocalTouch:
         """ Returns the number of touches currently detected """
         return self._read(_FT6XXX_REG_NUMTOUCHES, 1)[0]
 
-
     # pylint: disable=unused-variable
     @property
     def touches(self):
@@ -121,18 +123,19 @@ class Adafruit_FocalTouch:
         data = self._read(_FT6XXX_REG_DATA, 32)
 
         for i in range(2):
-            point_data = data[i*6+3 : i*6+9]
+            point_data = data[i * 6 + 3 : i * 6 + 9]
             if all([i == 0xFF for i in point_data]):
                 continue
-            #print([hex(i) for i in point_data])
-            x, y, weight, misc = struct.unpack('>HHBB', point_data)
-            #print(x, y, weight, misc)
+            # print([hex(i) for i in point_data])
+            x, y, weight, misc = struct.unpack(">HHBB", point_data)
+            # print(x, y, weight, misc)
             touch_id = y >> 12
             x &= 0xFFF
             y &= 0xFFF
-            point = {'x':x, 'y':y, 'id':touch_id}
+            point = {"x": x, "y": y, "id": touch_id}
             touchpoints.append(point)
         return touchpoints
+
     # pylint: enable=unused-variable
 
     def _read(self, register, length):
@@ -148,7 +151,7 @@ class Adafruit_FocalTouch:
     def _write(self, register, values):
         """Writes an array of 'length' bytes to the 'register'"""
         with self._i2c as i2c:
-            values = [(v & 0xFF) for v in [register]+values]
+            values = [(v & 0xFF) for v in [register] + values]
             i2c.write(bytes(values))
             if self._debug:
                 print("\t$%02X <= %s" % (values[0], [hex(i) for i in values[1:]]))

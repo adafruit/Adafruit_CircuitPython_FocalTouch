@@ -27,8 +27,8 @@ ft = adafruit_focaltouch.Adafruit_FocalTouch(i2c)
 while True:
     if ft.touched:
         ts = ft.touches
-        point = ts[0]   # the shield only supports one point!
+        point = ts[0]  # the shield only supports one point!
         # perform transformation to get into display coordinate system!
-        y = 320 - point['y']
-        x = 240 - point['x']
-        display.fill_rectangle(x-2, y-2, 4, 4, color565(255, 255, 255))
+        y = 320 - point["y"]
+        x = 240 - point["x"]
+        display.fill_rectangle(x - 2, y - 2, 4, 4, color565(255, 255, 255))

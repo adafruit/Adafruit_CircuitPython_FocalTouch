@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+# SPDX-License-Identifier: MIT
+
 """
 Simple painting demo that draws on an Adafruit capacitive touch shield with
 ILI9341 display and FT6206 captouch driver
@@ -6,8 +9,8 @@ ILI9341 display and FT6206 captouch driver
 import busio
 import board
 import digitalio
-import adafruit_focaltouch
 from adafruit_rgb_display import ili9341, color565
+import adafruit_focaltouch
 
 # Create library object using our Bus I2C & SPI port
 i2c = busio.I2C(board.SCL, board.SDA)

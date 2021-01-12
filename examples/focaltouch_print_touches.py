@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+# SPDX-License-Identifier: MIT
+
 """
 Example for getting touch data from an FT6206 or FT6236 capacitive
 touch driver, over I2C

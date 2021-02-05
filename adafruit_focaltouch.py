@@ -129,7 +129,7 @@ class Adafruit_FocalTouch:
         with self._i2c as i2c:
 
             if irq_pin is not None:
-                while self._irq_pin.value:
+                while irq_pin.value:
                     pass
 
             i2c.write(bytes([register & 0xFF]))

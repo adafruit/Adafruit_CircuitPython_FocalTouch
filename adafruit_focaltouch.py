@@ -67,12 +67,14 @@ class Adafruit_FocalTouch:
     _debug = False
     chip = None
 
-    def __init__(self, i2c, address=_FT6206_DEFAULT_I2C_ADDR, debug=False, irq_pin=None):
+    def __init__(
+        self, i2c, address=_FT6206_DEFAULT_I2C_ADDR, debug=False, irq_pin=None
+    ):
         self._i2c = I2CDevice(i2c, address)
         self._debug = debug
         self.irq_pin = irq_pin
 
-        chip_data = self._read(_FT6XXX_REG_LIBH, 8) # don't wait for IRQ
+        chip_data = self._read(_FT6XXX_REG_LIBH, 8)  # don't wait for IRQ
         lib_ver, chip_id, _, _, firm_id, _, vend_id = struct.unpack(
             ">HBBBBBB", chip_data
         )
@@ -90,7 +92,6 @@ class Adafruit_FocalTouch:
             print("Firmware ID %02X" % firm_id)
             print("Point rate %d Hz" % self._read(_FT6XXX_REG_POINTRATE, 1)[0])
             print("Thresh %d" % self._read(_FT6XXX_REG_THRESHHOLD, 1)[0])
-
 
     @property
     def touched(self):
@@ -127,8 +128,8 @@ class Adafruit_FocalTouch:
         """Returns an array of 'length' bytes from the 'register'"""
         with self._i2c as i2c:
 
-            if (irq_pin is not None):
-                while (self.irq_pin.value):
+            if irq_pin is not None:
+                while self.irq_pin.value:
                     pass
 
             i2c.write(bytes([register & 0xFF]))

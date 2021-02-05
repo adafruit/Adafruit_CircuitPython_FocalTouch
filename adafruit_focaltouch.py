@@ -72,7 +72,7 @@ class Adafruit_FocalTouch:
     ):
         self._i2c = I2CDevice(i2c, address)
         self._debug = debug
-        self.irq_pin = irq_pin
+        self._irq_pin = irq_pin
 
         chip_data = self._read(_FT6XXX_REG_LIBH, 8)  # don't wait for IRQ
         lib_ver, chip_id, _, _, firm_id, _, vend_id = struct.unpack(
@@ -96,7 +96,7 @@ class Adafruit_FocalTouch:
     @property
     def touched(self):
         """ Returns the number of touches currently detected """
-        return self._read(_FT6XXX_REG_NUMTOUCHES, 1, irq_pin=self.irq_pin)[0]
+        return self._read(_FT6XXX_REG_NUMTOUCHES, 1, irq_pin=self._irq_pin)[0]
 
     # pylint: disable=unused-variable
     @property
@@ -106,7 +106,7 @@ class Adafruit_FocalTouch:
         touch coordinates, and 'id' as the touch # for multitouch tracking
         """
         touchpoints = []
-        data = self._read(_FT6XXX_REG_DATA, 32, irq_pin=self.irq_pin)
+        data = self._read(_FT6XXX_REG_DATA, 32, irq_pin=self._irq_pin)
 
         for i in range(2):
             point_data = data[i * 6 + 3 : i * 6 + 9]
@@ -129,7 +129,7 @@ class Adafruit_FocalTouch:
         with self._i2c as i2c:
 
             if irq_pin is not None:
-                while self.irq_pin.value:
+                while self._irq_pin.value:
                     pass
 
             i2c.write(bytes([register & 0xFF]))

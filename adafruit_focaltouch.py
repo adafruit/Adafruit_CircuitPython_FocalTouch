@@ -35,10 +35,7 @@ Implementation Notes
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_FocalTouch.git"
 
-try:
-    import struct
-except ImportError:
-    import ustruct as struct
+import struct
 
 from adafruit_bus_device.i2c_device import I2CDevice
 

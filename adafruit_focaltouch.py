@@ -41,19 +41,30 @@ from adafruit_bus_device.i2c_device import I2CDevice
 
 from micropython import const
 
+try:
+    from typing import List
+except ImportError:
+    pass
 
-_FT6206_DEFAULT_I2C_ADDR = 0x38
 
-_FT6XXX_REG_DATA = const(0x00)
-_FT6XXX_REG_NUMTOUCHES = const(0x02)
-_FT6XXX_REG_THRESHHOLD = const(0x80)
-_FT6XXX_REG_POINTRATE = const(0x88)
-_FT6XXX_REG_LIBH = const(0xA1)
-_FT6XXX_REG_LIBL = const(0xA2)
-_FT6XXX_REG_CHIPID = const(0xA3)
-_FT6XXX_REG_FIRMVERS = const(0xA6)
-_FT6XXX_REG_VENDID = const(0xA8)
-_FT6XXX_REG_RELEASE = const(0xAF)
+_FT_DEFAULT_I2C_ADDR = 0x38
+
+_FT_REG_DATA = const(0x00)
+_FT_REG_NUMTOUCHES = const(0x02)
+_FT_REG_THRESHHOLD = const(0x80)
+_FT_REG_POINTRATE = const(0x88)
+_FT_REG_LIBH = const(0xA1)
+_FT_REG_LIBL = const(0xA2)
+_FT_REG_CHIPID = const(0xA3)
+_FT_REG_FIRMVERS = const(0xA6)
+_FT_REG_VENDID = const(0xA8)
+_FT_REG_RELEASE = const(0xAF)
+
+_FT6XXX_TOUCH_BUFFER_SIZE = 32
+_FT6XXX_SCALE_FACTOR = (1.0, 1.0)
+
+_FT5X06_TOUCH_BUFFER_SIZE = 63
+_FT5X06_SCALE_FACTOR = (2.24, 2.14)  # (x,y) scaling factors
 
 
 class Adafruit_FocalTouch:
@@ -61,51 +72,64 @@ class Adafruit_FocalTouch:
     A driver for the FocalTech capacitive touch sensor.
     """
 
-    _debug = False
-    chip = None
-
-    def __init__(
-        self, i2c, address=_FT6206_DEFAULT_I2C_ADDR, debug=False, irq_pin=None
-    ):
+    def __init__(self, i2c, address=_FT_DEFAULT_I2C_ADDR, debug=False, irq_pin=None):
         self._i2c = I2CDevice(i2c, address)
         self._debug = debug
         self._irq_pin = irq_pin
 
-        chip_data = self._read(_FT6XXX_REG_LIBH, 8)  # don't wait for IRQ
+        chip_data = self._read(_FT_REG_LIBH, 8)  # don't wait for IRQ
+        # print("chip_data: {%x}".format(chip_data))
         lib_ver, chip_id, _, _, firm_id, _, vend_id = struct.unpack(
             ">HBBBBBB", chip_data
         )
+        print(
+            "lib_ver: {:02X}, chip_id: {:02X}, firm_id: {:02X}, vend_id: {:02X}".format(
+                lib_ver, chip_id, firm_id, vend_id
+            )
+        )
 
-        if vend_id != 0x11:
+        if vend_id not in (0x11, 0x42):
             raise RuntimeError("Did not find FT chip")
 
         if chip_id == 0x06:
             self.chip = "FT6206"
+            self._touch_buffer_size = _FT6XXX_TOUCH_BUFFER_SIZE
+            self._scale_factor = _FT6XXX_SCALE_FACTOR
         elif chip_id == 0x64:
             self.chip = "FT6236"
+            self._touch_buffer_size = _FT6XXX_TOUCH_BUFFER_SIZE
+            self._scale_factor = _FT6XXX_SCALE_FACTOR
+        elif chip_id == 0x55:
+            self.chip = "FT5x06"
+            self._touch_buffer_size = _FT5X06_TOUCH_BUFFER_SIZE
+            self._scale_factor = _FT5X06_SCALE_FACTOR
 
         if debug:
             print("Library vers %04X" % lib_ver)
             print("Firmware ID %02X" % firm_id)
-            print("Point rate %d Hz" % self._read(_FT6XXX_REG_POINTRATE, 1)[0])
-            print("Thresh %d" % self._read(_FT6XXX_REG_THRESHHOLD, 1)[0])
+            print("Point rate %d Hz" % self._read(_FT_REG_POINTRATE, 1)[0])
+            print("Thresh %d" % self._read(_FT_REG_THRESHHOLD, 1)[0])
 
     @property
-    def touched(self):
+    def touched(self) -> int:
         """ Returns the number of touches currently detected """
-        return self._read(_FT6XXX_REG_NUMTOUCHES, 1, irq_pin=self._irq_pin)[0]
+        return self._read(_FT_REG_NUMTOUCHES, 1, irq_pin=self._irq_pin)[0]
 
     # pylint: disable=unused-variable
     @property
-    def touches(self):
+    def touches(self) -> List[dict]:
         """
         Returns a list of touchpoint dicts, with 'x' and 'y' containing the
         touch coordinates, and 'id' as the touch # for multitouch tracking
         """
         touchpoints = []
-        data = self._read(_FT6XXX_REG_DATA, 32, irq_pin=self._irq_pin)
+        data = self._read(_FT_REG_DATA, self._touch_buffer_size, irq_pin=self._irq_pin)
 
-        for i in range(2):
+        touchcount = data[_FT_REG_NUMTOUCHES - _FT_REG_DATA]
+        if self._debug:
+            print("touchcount: {}".format(touchcount))
+
+        for i in range(touchcount):
             point_data = data[i * 6 + 3 : i * 6 + 9]
             if all(i == 255 for i in point_data):
                 continue
@@ -113,15 +137,15 @@ class Adafruit_FocalTouch:
             x, y, weight, misc = struct.unpack(">HHBB", point_data)
             # print(x, y, weight, misc)
             touch_id = y >> 12
-            x &= 0xFFF
-            y &= 0xFFF
+            x = round((x & 0xFFF) / self._scale_factor[0])
+            y = round((y & 0xFFF) / self._scale_factor[1])
             point = {"x": x, "y": y, "id": touch_id}
+            if self._debug:
+                print("id: {}, x: {}, y: {}".format(touch_id, x, y))
             touchpoints.append(point)
         return touchpoints
 
-    # pylint: enable=unused-variable
-
-    def _read(self, register, length, irq_pin=None):
+    def _read(self, register, length, irq_pin=None) -> bytearray:
         """Returns an array of 'length' bytes from the 'register'"""
         with self._i2c as i2c:
 
@@ -137,10 +161,12 @@ class Adafruit_FocalTouch:
                 print("\t$%02X => %s" % (register, [hex(i) for i in result]))
             return result
 
-    def _write(self, register, values):
+    def _write(self, register, values) -> None:
         """Writes an array of 'length' bytes to the 'register'"""
         with self._i2c as i2c:
             values = [(v & 0xFF) for v in [register] + values]
+            print("register: %02X, value: %02X" % (values[0], values[1]))
             i2c.write(bytes(values))
+
             if self._debug:
                 print("\t$%02X <= %s" % (values[0], [hex(i) for i in values[1:]]))

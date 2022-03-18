@@ -95,7 +95,7 @@ class Adafruit_FocalTouch:
             self.chip = "FT6206"
             self._touch_buffer_size = _FT6XXX_TOUCH_BUFFER_SIZE
             self._scale_factor = _FT6XXX_SCALE_FACTOR
-        elif chip_id == 0x64 or chip_id == 0x36:
+        elif chip_id in (0x64, 0x36):
             self.chip = "FT6236"
             self._touch_buffer_size = _FT6XXX_TOUCH_BUFFER_SIZE
             self._scale_factor = _FT6XXX_SCALE_FACTOR

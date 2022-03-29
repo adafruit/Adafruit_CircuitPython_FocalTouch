@@ -112,7 +112,7 @@ class Adafruit_FocalTouch:
 
     @property
     def touched(self) -> int:
-        """ Returns the number of touches currently detected """
+        """Returns the number of touches currently detected"""
         return self._read(_FT_REG_NUMTOUCHES, 1, irq_pin=self._irq_pin)[0]
 
     # pylint: disable=unused-variable

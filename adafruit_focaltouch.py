@@ -148,7 +148,6 @@ class Adafruit_FocalTouch:
     def _read(self, register, length, irq_pin=None) -> bytearray:
         """Returns an array of 'length' bytes from the 'register'"""
         with self._i2c as i2c:
-
             if irq_pin is not None:
                 while irq_pin.value:
                     pass

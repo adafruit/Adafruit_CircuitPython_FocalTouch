@@ -8,27 +8,16 @@ read errors from the FocalTouch chip.
 """
 
 import time
-import busio
 import board
 from digitalio import DigitalInOut, Direction
 import adafruit_focaltouch
 
 
-if hasattr(
-    board, "SCL"
-):  # if SCL and SDA pins are defined by the board definition, use them.
-    SCL_pin = board.SCL
-    SDA_pin = board.SDA
-else:
-    SCL_pin = board.IO42  # set to a pin that you want to use for SCL
-    SDA_pin = board.IO41  # set to a pin that you want to use for SDA
-
 IRQ_pin = board.IO39  # select a pin to connect to the display's interrupt pin ("IRQ")
-
-i2c = busio.I2C(SCL_pin, SDA_pin)
+i2c = board.I2C()
 
 # Setup the interrupt (IRQ) pin for input
-irq = DigitalInOut(board.IO39)
+irq = DigitalInOut(IRQ_pin)
 irq.direction = Direction.INPUT
 
 # Create library object (named "ft") using a Bus I2C port and using an interrupt pin (IRQ)

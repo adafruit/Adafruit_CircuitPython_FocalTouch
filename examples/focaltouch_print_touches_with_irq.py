@@ -8,7 +8,6 @@ read errors from the FocalTouch chip.
 """
 
 import time
-import busio
 import board
 from digitalio import DigitalInOut, Direction
 import adafruit_focaltouch

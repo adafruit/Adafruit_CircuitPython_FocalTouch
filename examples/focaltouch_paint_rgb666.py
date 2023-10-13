@@ -5,15 +5,14 @@ Simple painting demo that draws on the Adafruit Qualia ESP32-S3 RGB666
 with the 4.0" square display and FT6206 captouch driver
 """
 
-from displayio import release_displays
-release_displays()
-
 import displayio
 import busio
 import board
 import dotclockframebuffer
 from framebufferio import FramebufferDisplay
 import adafruit_focaltouch
+
+displayio.release_displays()
 
 # Initialize the Display
 tft_pins = dict(board.TFT_PINS)
@@ -40,8 +39,10 @@ init_sequence_tl040hds20 = bytes()
 board.I2C().deinit()
 i2c = busio.I2C(board.SCL, board.SDA, frequency=100_000)
 tft_io_expander = dict(board.TFT_IO_EXPANDER)
-#tft_io_expander['i2c_address'] = 0x38 # uncomment for rev B
-dotclockframebuffer.ioexpander_send_init_sequence(i2c, init_sequence_tl040hds20, **tft_io_expander)
+# tft_io_expander['i2c_address'] = 0x38 # uncomment for rev B
+dotclockframebuffer.ioexpander_send_init_sequence(
+    i2c, init_sequence_tl040hds20, **tft_io_expander
+)
 
 fb = dotclockframebuffer.DotClockFramebuffer(**tft_pins, **tft_timings)
 display = FramebufferDisplay(fb, auto_refresh=False)
@@ -54,7 +55,10 @@ palette_height = display.height // 8
 bitmap = displayio.Bitmap(display.width, display.height, 65535)
 
 # Create a TileGrid to hold the bitmap
-tile_grid = displayio.TileGrid(bitmap, pixel_shader=displayio.ColorConverter(input_colorspace=displayio.Colorspace.RGB565))
+tile_grid = displayio.TileGrid(
+    bitmap,
+    pixel_shader=displayio.ColorConverter(input_colorspace=displayio.Colorspace.RGB565),
+)
 
 # Create a Group to hold the TileGrid
 group = displayio.Group()
@@ -73,7 +77,9 @@ current_color = displayio.ColorConverter().convert(0xFFFFFF)
 
 for i in range(palette_width):
     color_index = i * 255 // palette_width
-    rgb565 = displayio.ColorConverter().convert(color_index | color_index << 8 | color_index << 16)
+    rgb565 = displayio.ColorConverter().convert(
+        color_index | color_index << 8 | color_index << 16
+    )
     r_mask = 0xF800
     g_mask = 0x07E0
     b_mask = 0x001F
@@ -94,13 +100,15 @@ while True:
                 y = touch["y"]
                 if x < palette_width:
                     current_color = bitmap[x, y]
-                    print(x, y, current_color)
                 else:
                     for i in range(pixel_size):
                         for j in range(pixel_size):
                             x_pixel = x - (pixel_size // 2) + i
                             y_pixel = y - (pixel_size // 2) + j
-                            if 0 <= x_pixel < display.width and 0 <= y_pixel < display.height:
+                            if (
+                                0 <= x_pixel < display.width
+                                and 0 <= y_pixel < display.height
+                            ):
                                 bitmap[x_pixel, y_pixel] = current_color
         except RuntimeError:
             pass

@@ -88,7 +88,7 @@ class Adafruit_FocalTouch:
             )
         )
 
-        if vend_id not in (0x11, 0x42):
+        if vend_id not in (0x01, 0x11, 0x42):
             raise RuntimeError("Did not find FT chip")
 
         if chip_id == 0x06:
@@ -103,6 +103,10 @@ class Adafruit_FocalTouch:
             self.chip = "FT5x06"
             self._touch_buffer_size = _FT5X06_TOUCH_BUFFER_SIZE
             self._scale_factor = _FT5X06_SCALE_FACTOR
+        elif vend_id == 0x01 and chip_id == 0:
+            self.chip = "CST816"
+            self._touch_buffer_size = _FT6XXX_TOUCH_BUFFER_SIZE
+            self._scale_factor = _FT6XXX_SCALE_FACTOR
 
         if debug:
             print("Library vers %04X" % lib_ver)

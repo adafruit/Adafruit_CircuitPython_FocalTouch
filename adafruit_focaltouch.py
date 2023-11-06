@@ -7,7 +7,7 @@
 ====================================================
 
 CircuitPython driver for common low-cost FocalTech capacitive touch chips.
-Currently supports FT6206 & FT6236.
+Currently supports FT6206, FT6236 & FT6336.
 
 * Author(s): ladyada
 
@@ -21,6 +21,8 @@ Implementation Notes
 
 * Adafruit `2.8" TFT Touch Shield for Arduino w/Capacitive Touch
   <http://www.adafruit.com/product/1947>`_ (Product ID: 1947)
+
+* M5Stack Core2 and CoreS3
 
 **Software and Dependencies:**
 
@@ -88,7 +90,7 @@ class Adafruit_FocalTouch:
             )
         )
 
-        if vend_id not in (0x11, 0x42):
+        if vend_id not in (0x11, 0x42, 0x01):
             raise RuntimeError("Did not find FT chip")
 
         if chip_id == 0x06:

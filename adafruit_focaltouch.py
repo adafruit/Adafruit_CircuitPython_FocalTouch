@@ -167,7 +167,8 @@ class Adafruit_FocalTouch:
         """Writes an array of 'length' bytes to the 'register'"""
         with self._i2c as i2c:
             values = [(v & 0xFF) for v in [register] + values]
-            print("register: %02X, value: %02X" % (values[0], values[1]))
+            if self._debug:
+                print("register: %02X, value: %02X" % (values[0], values[1]))
             i2c.write(bytes(values))
 
             if self._debug:

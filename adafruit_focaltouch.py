@@ -84,11 +84,12 @@ class Adafruit_FocalTouch:
         lib_ver, chip_id, _, _, firm_id, _, vend_id = struct.unpack(
             ">HBBBBBB", chip_data
         )
-        print(
-            "lib_ver: {:02X}, chip_id: {:02X}, firm_id: {:02X}, vend_id: {:02X}".format(
-                lib_ver, chip_id, firm_id, vend_id
+        if debug:
+            print(
+                "lib_ver: {:02X}, chip_id: {:02X}, firm_id: {:02X}, vend_id: {:02X}".format(
+                    lib_ver, chip_id, firm_id, vend_id
+                )
             )
-        )
 
         if vend_id not in (0x11, 0x42, 0x01):
             raise RuntimeError("Did not find FT chip")

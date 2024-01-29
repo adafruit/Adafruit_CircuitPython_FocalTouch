@@ -84,11 +84,12 @@ class Adafruit_FocalTouch:
         lib_ver, chip_id, _, _, firm_id, _, vend_id = struct.unpack(
             ">HBBBBBB", chip_data
         )
-        print(
-            "lib_ver: {:02X}, chip_id: {:02X}, firm_id: {:02X}, vend_id: {:02X}".format(
-                lib_ver, chip_id, firm_id, vend_id
+        if debug:
+            print(
+                "lib_ver: {:02X}, chip_id: {:02X}, firm_id: {:02X}, vend_id: {:02X}".format(
+                    lib_ver, chip_id, firm_id, vend_id
+                )
             )
-        )
 
         if vend_id not in (0x11, 0x42, 0x01):
             raise RuntimeError("Did not find FT chip")
@@ -166,7 +167,8 @@ class Adafruit_FocalTouch:
         """Writes an array of 'length' bytes to the 'register'"""
         with self._i2c as i2c:
             values = [(v & 0xFF) for v in [register] + values]
-            print("register: %02X, value: %02X" % (values[0], values[1]))
+            if self._debug:
+                print("register: %02X, value: %02X" % (values[0], values[1]))
             i2c.write(bytes(values))
 
             if self._debug:

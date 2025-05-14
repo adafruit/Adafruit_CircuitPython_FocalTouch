@@ -5,11 +5,12 @@ Simple painting demo that draws on the Adafruit Qualia ESP32-S3 RGB666
 with the 4.0" square display and FT6206 captouch driver
 """
 
-import displayio
-import busio
 import board
+import busio
+import displayio
 import dotclockframebuffer
 from framebufferio import FramebufferDisplay
+
 import adafruit_focaltouch
 
 displayio.release_displays()
@@ -34,15 +35,13 @@ tft_timings = {
     "pclk_idle_high": False,
 }
 
-init_sequence_tl040hds20 = bytes()
+init_sequence_tl040hds20 = b""
 
 board.I2C().deinit()
 i2c = busio.I2C(board.SCL, board.SDA, frequency=100_000)
 tft_io_expander = dict(board.TFT_IO_EXPANDER)
 # tft_io_expander['i2c_address'] = 0x38 # uncomment for rev B
-dotclockframebuffer.ioexpander_send_init_sequence(
-    i2c, init_sequence_tl040hds20, **tft_io_expander
-)
+dotclockframebuffer.ioexpander_send_init_sequence(i2c, init_sequence_tl040hds20, **tft_io_expander)
 
 fb = dotclockframebuffer.DotClockFramebuffer(**tft_pins, **tft_timings)
 display = FramebufferDisplay(fb, auto_refresh=False)
@@ -77,9 +76,7 @@ current_color = displayio.ColorConverter().convert(0xFFFFFF)
 
 for i in range(palette_width):
     color_index = i * 255 // palette_width
-    rgb565 = displayio.ColorConverter().convert(
-        color_index | color_index << 8 | color_index << 16
-    )
+    rgb565 = displayio.ColorConverter().convert(color_index | color_index << 8 | color_index << 16)
     r_mask = 0xF800
     g_mask = 0x07E0
     b_mask = 0x001F
@@ -105,10 +102,7 @@ while True:
                         for j in range(pixel_size):
                             x_pixel = x - (pixel_size // 2) + i
                             y_pixel = y - (pixel_size // 2) + j
-                            if (
-                                0 <= x_pixel < display.width
-                                and 0 <= y_pixel < display.height
-                            ):
+                            if 0 <= x_pixel < display.width and 0 <= y_pixel < display.height:
                                 bitmap[x_pixel, y_pixel] = current_color
         except RuntimeError:
             pass

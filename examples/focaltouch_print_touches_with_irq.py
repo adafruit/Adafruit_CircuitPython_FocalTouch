@@ -8,10 +8,11 @@ read errors from the FocalTouch chip.
 """
 
 import time
+
 import board
 from digitalio import DigitalInOut, Direction
-import adafruit_focaltouch
 
+import adafruit_focaltouch
 
 IRQ_pin = board.IO39  # select a pin to connect to the display's interrupt pin ("IRQ")
 i2c = board.I2C()

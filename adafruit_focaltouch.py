@@ -40,7 +40,6 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_FocalTouch.git"
 import struct
 
 from adafruit_bus_device.i2c_device import I2CDevice
-
 from micropython import const
 
 try:
@@ -81,24 +80,20 @@ class Adafruit_FocalTouch:
 
         chip_data = self._read(_FT_REG_LIBH, 8)  # don't wait for IRQ
         # print("chip_data: {%x}".format(chip_data))
-        lib_ver, chip_id, _, _, firm_id, _, vend_id = struct.unpack(
-            ">HBBBBBB", chip_data
-        )
+        lib_ver, chip_id, _, _, firm_id, _, vend_id = struct.unpack(">HBBBBBB", chip_data)
         if debug:
             print(
-                "lib_ver: {:02X}, chip_id: {:02X}, firm_id: {:02X}, vend_id: {:02X}".format(
-                    lib_ver, chip_id, firm_id, vend_id
-                )
+                f"lib_ver: {lib_ver:02X}, chip_id: {chip_id:02X}, firm_id: {firm_id:02X}, vend_id: {vend_id:02X}"  # noqa: E501
             )
 
-        if vend_id not in (0x11, 0x42, 0x01):
+        if vend_id not in {0x11, 0x42, 0x01}:
             raise RuntimeError("Did not find FT chip")
 
         if chip_id == 0x06:
             self.chip = "FT6206"
             self._touch_buffer_size = _FT6XXX_TOUCH_BUFFER_SIZE
             self._scale_factor = _FT6XXX_SCALE_FACTOR
-        elif chip_id in (0x64, 0x36):
+        elif chip_id in {0x64, 0x36}:
             self.chip = "FT6236"
             self._touch_buffer_size = _FT6XXX_TOUCH_BUFFER_SIZE
             self._scale_factor = _FT6XXX_SCALE_FACTOR
@@ -108,17 +103,16 @@ class Adafruit_FocalTouch:
             self._scale_factor = _FT5X06_SCALE_FACTOR
 
         if debug:
-            print("Library vers %04X" % lib_ver)
-            print("Firmware ID %02X" % firm_id)
-            print("Point rate %d Hz" % self._read(_FT_REG_POINTRATE, 1)[0])
-            print("Thresh %d" % self._read(_FT_REG_THRESHHOLD, 1)[0])
+            print(f"Library vers {lib_ver:04X}")
+            print(f"Firmware ID {firm_id:02X}")
+            print(f"Point rate {self._read(_FT_REG_POINTRATE, 1)[0]} Hz")
+            print(f"Thresh {self._read(_FT_REG_THRESHHOLD, 1)[0]}")
 
     @property
     def touched(self) -> int:
         """Returns the number of touches currently detected"""
         return self._read(_FT_REG_NUMTOUCHES, 1, irq_pin=self._irq_pin)[0]
 
-    # pylint: disable=unused-variable
     @property
     def touches(self) -> List[dict]:
         """
@@ -130,21 +124,21 @@ class Adafruit_FocalTouch:
 
         touchcount = data[_FT_REG_NUMTOUCHES - _FT_REG_DATA]
         if self._debug:
-            print("touchcount: {}".format(touchcount))
+            print(f"touchcount: {touchcount}")
 
         for i in range(touchcount):
             point_data = data[i * 6 + 3 : i * 6 + 9]
             if all(i == 255 for i in point_data):
                 continue
             # print([hex(i) for i in point_data])
-            x, y, weight, misc = struct.unpack(">HHBB", point_data)
+            x, y, weight, misc = struct.unpack(">HHBB", point_data)  # noqa: F841
             # print(x, y, weight, misc)
             touch_id = y >> 12
             x = round((x & 0xFFF) / self._scale_factor[0])
             y = round((y & 0xFFF) / self._scale_factor[1])
             point = {"x": x, "y": y, "id": touch_id}
             if self._debug:
-                print("id: {}, x: {}, y: {}".format(touch_id, x, y))
+                print(f"id: {touch_id}, x: {x}, y: {y}")
             touchpoints.append(point)
         return touchpoints
 
@@ -160,7 +154,7 @@ class Adafruit_FocalTouch:
 
             i2c.readinto(result)
             if self._debug:
-                print("\t$%02X => %s" % (register, [hex(i) for i in result]))
+                print(f"\t${register:02X} => {[hex(i) for i in result]}")
             return result
 
     def _write(self, register, values) -> None:
@@ -168,8 +162,8 @@ class Adafruit_FocalTouch:
         with self._i2c as i2c:
             values = [(v & 0xFF) for v in [register] + values]
             if self._debug:
-                print("register: %02X, value: %02X" % (values[0], values[1]))
+                print(f"register: {values[0]:02X}, value: {values[1]:02X}")
             i2c.write(bytes(values))
 
             if self._debug:
-                print("\t$%02X <= %s" % (values[0], [hex(i) for i in values[1:]]))
+                print(f"\t${values[0]:02X} <= {[hex(i) for i in values[1:]]}")

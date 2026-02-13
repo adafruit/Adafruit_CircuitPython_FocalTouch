@@ -86,7 +86,7 @@ class Adafruit_FocalTouch:
                 f"lib_ver: {lib_ver:02X}, chip_id: {chip_id:02X}, firm_id: {firm_id:02X}, vend_id: {vend_id:02X}"  # noqa: E501
             )
 
-        if vend_id not in {0x11, 0x42, 0x01, 0x02,0x20}:
+        if vend_id not in {0x11, 0x42, 0x01, 0x02, 0x20}:
             raise RuntimeError("Did not find FT chip")
 
         if chip_id == 0x06:
